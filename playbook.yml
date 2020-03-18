@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars:
+    ncpaprop_requirements_packages:
+      - blas-devel
+      - fftw-devel
+      - gcc-c++
+      - git
+      - gsl-devel
+      - lapack-devel
+      - make
+      - openmpi-devel
+  tasks:
+    - become: yes
+      block:
+        - package:
+            state: installed
+            name: "{{ ncpaprop_requirements_packages }}"
+    - git:
+        repo: /vagrant/ncpaprop/.git
+        dest: /home/vagrant/ncpaprop
+    - command:
+        chdir: /home/vagrant/ncpaprop
+        argv:
+          - ./configure
+          - --with-localpetsc
+          - --enable-autodependencies
+          - --prefix=/home/vagrant/sw
